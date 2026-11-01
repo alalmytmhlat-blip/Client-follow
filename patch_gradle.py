@@ -16,4 +16,9 @@ elif os.path.exists(grv):
     open(grv, 'w', encoding='utf-8').write(s)
 else:
     sys.exit('build.gradle not found')
+gp = os.path.join(d, 'android/gradle.properties')
+props = open(gp, encoding='utf-8').read() if os.path.exists(gp) else ''
+if 'kotlin.jvm.target.validation.mode' not in props:
+    props += '\nkotlin.jvm.target.validation.mode=IGNORE\n'
+open(gp, 'w', encoding='utf-8').write(props)
 print('gradle patched')

@@ -1,6 +1,4 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
 class Notifs {
@@ -17,11 +15,6 @@ class Notifs {
   );
 
   static Future<void> init() async {
-    tzdata.initializeTimeZones();
-    try {
-      final name = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(name));
-    } catch (_) {}
     await _p.initialize(const InitializationSettings(
       android: AndroidInitializationSettings('@drawable/ic_stat_notify'),
     ));
@@ -33,7 +26,7 @@ class Notifs {
   static Future<void> schedule(
       int id, String title, String body, DateTime when) async {
     if (!when.isAfter(DateTime.now())) return;
-    final t = tz.TZDateTime.from(when, tz.local);
+    final t = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.UTC, when.millisecondsSinceEpoch);
     try {
       await _p.zonedSchedule(
         id, title, body, t, _details,
