@@ -33,14 +33,14 @@ for root in roots:
             with open(path, encoding="utf-8") as f:
                 source = f.read()
             updated = re.sub(
-                r"(?m)^(\\s*compileSdk(?:Version)?\\s*(?:=\\s*)?).*$",
+                r"(?m)^(\s*compileSdk(?:Version)?\s*(?:=\s*)?).*$",
                 lambda m: m.group(1) + "36",
                 source)
             if updated != source:
                 with open(path, "w", encoding="utf-8") as f:
                     f.write(updated)
                 patched.append(path)
-            normalized = path.replace("\\\\", "/")
+            normalized = path.replace("\\", "/")
             if "file_picker-" in normalized:
                 file_picker_files.append(path)
 print("Patched Android plugin Gradle files:", len(patched))
@@ -51,7 +51,7 @@ if not file_picker_files:
 for path in file_picker_files:
     with open(path, encoding="utf-8") as f:
         text = f.read()
-    if not re.search(r"(?m)^\\s*compileSdk(?:Version)?\\s*(?:=\\s*)?36\\s*$", text):
+    if not re.search(r"(?m)^\s*compileSdk(?:Version)?\s*(?:=\s*)?36\s*$", text):
         sys.exit("ERROR: file_picker compileSdk is not API 36: " + path)
 print("Verified file_picker compileSdk 36")
 PY
