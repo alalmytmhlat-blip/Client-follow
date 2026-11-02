@@ -41,7 +41,9 @@ for root in roots:
                     f.write(updated)
                 patched.append(path)
             normalized = path.replace("\\", "/")
-            if "file_picker-" in normalized:
+            # Ignore example projects bundled inside plugin packages; they are not
+            # part of the app build and may retain their own compileSdk setting.
+            if "file_picker-" in normalized and "/example/" not in normalized:
                 file_picker_files.append(path)
 print("Patched Android plugin Gradle files:", len(patched))
 for path in patched:
